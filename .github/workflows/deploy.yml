@@ -19,11 +19,8 @@ jobs:
           node-version: '22'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install web dependencies (react-native-web + react-dom)
-        run: npm install react-native-web react-dom --legacy-peer-deps --save
+      - name: Install all dependencies
+        run: npm install
 
       - name: Export web bundle
         run: npx expo export --platform web --output-dir dist

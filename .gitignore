@@ -48,3 +48,6 @@ web-export/
 
 # Temp
 .old_web_build/
+node_modules/.package-lock.json
+.npm
+dist-test/
