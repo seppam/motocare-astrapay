@@ -1,8 +1,10 @@
 import React from 'react';
+import { View } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { MD3DarkTheme, PaperProvider } from 'react-native-paper';
+import DemoBanner from '../components/DemoBanner';
 
 // Define the central theme matching the POS AstraPay dark aesthetic
 const theme = {
@@ -21,42 +23,50 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider>
       <PaperProvider theme={theme}>
-        <StatusBar style="light" />
-        <Stack
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: '#0a1128',
-            },
-            headerTintColor: '#ffffff',
-            headerTitleStyle: {
-              fontWeight: 'bold',
-            },
-            contentStyle: {
-              backgroundColor: '#0a1128',
-            },
-          }}
-        >
-          {/* Main Tab Navigator */}
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          
-          {/* Service Details Route */}
-          <Stack.Screen 
-            name="service/[id]" 
-            options={{ 
-              title: 'Detail Layanan',
-              headerBackTitle: 'Kembali',
-            }} 
-          />
-          
-          {/* Checkout / Payment Route */}
-          <Stack.Screen 
-            name="payment/[bookingId]" 
-            options={{ 
-              title: 'Pembayaran QRIS',
-              headerBackTitle: 'Kembali',
-            }} 
-          />
-        </Stack>
+        {/* Dark background wrapper for the entire app */}
+        <View style={{ flex: 1, backgroundColor: '#0a1128' }}>
+
+          {/* Demo notice banner — links to GitHub repo */}
+          <DemoBanner />
+
+          <StatusBar style="light" />
+
+          <Stack
+            screenOptions={{
+              headerStyle: {
+                backgroundColor: '#0a1128',
+              },
+              headerTintColor: '#ffffff',
+              headerTitleStyle: {
+                fontWeight: 'bold',
+              },
+              contentStyle: {
+                backgroundColor: '#0a1128',
+              },
+            }}
+          >
+            {/* Main Tab Navigator */}
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+
+            {/* Service Details Route */}
+            <Stack.Screen
+              name="service/[id]"
+              options={{
+                title: 'Detail Layanan',
+                headerBackTitle: 'Kembali',
+              }}
+            />
+
+            {/* Checkout / Payment Route */}
+            <Stack.Screen
+              name="payment/[bookingId]"
+              options={{
+                title: 'Pembayaran QRIS',
+                headerBackTitle: 'Kembali',
+              }}
+            />
+          </Stack>
+        </View>
       </PaperProvider>
     </SafeAreaProvider>
   );
