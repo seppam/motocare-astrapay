@@ -1,0 +1,49 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Build & Deploy Web
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install web dependencies (react-native-web + react-dom)
+        run: npm install react-native-web react-dom --legacy-peer-deps --save
+
+      - name: Export web bundle
+        run: npx expo export --platform web --output-dir dist
+
+      - name: Convert absolute paths to relative paths for GitHub Pages subpath
+        run: |
+          # Fix index.html: change absolute paths to relative
+          sed -i 's|href="/|href="./|g' dist/index.html
+          sed -i 's|src="/|src="./|g' dist/index.html
+          sed -i 's|href="/favicon.ico"|href="./favicon.ico"|g' dist/index.html
+          # Fix all JS bundles and assets: absolute → relative
+          find dist -name "*.js" -o -name "*.css" -o -name "*.html" | xargs sed -i 's|="/_|="./_|g'
+
+      - name: Create .nojekyll
+        run: touch dist/.nojekyll
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
+          force_orphan: true
